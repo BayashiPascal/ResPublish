@@ -1,0 +1,70 @@
+\section*{Introduction}
+
+ResPublish is a C library providing structures and functions to log and/or display data in various way during execution of a process.\\ 
+
+\begin{itemize}
+\item TextOMeter: displays textual data in a dedicated Xterm from a running parent process.
+\end{itemize}
+
+It uses the \begin{ttfamily}PBErr\end{ttfamily} library.\\
+
+\section{Definitions}
+
+\subsection{TextOMeter}
+
+The solution implemented in ResPublish to display text in a dedicated Xterm (while the parent process is attached to another terminal) is resumed below. It is very probably not portable to systems other than the one it has been developped on.\\
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/xterm.c}
+\end{ttfamily}
+\end{scriptsize}
+
+\section{Interface}
+
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/respublish.h}
+\end{ttfamily}
+\end{scriptsize}
+
+\section{Code}
+
+\subsection{respublish.c}
+
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/respublish.c}
+\end{ttfamily}
+\end{scriptsize}
+
+\subsection{respublish-inline.c}
+
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/respublish-inline.c}
+\end{ttfamily}
+\end{scriptsize}
+
+\section{Makefile}
+
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/Makefile}
+\end{ttfamily}
+\end{scriptsize}
+
+\section{Unit tests}
+
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/main.c}
+\end{ttfamily}
+\end{scriptsize}
+
+\section{Unit tests output}
+
+\begin{scriptsize}
+\begin{ttfamily}
+\verbatiminput{/home/bayashi/GitHub/ResPublish/unitTestRef.txt}
+\end{ttfamily}
+\end{scriptsize}
