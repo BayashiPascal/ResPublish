@@ -63,6 +63,12 @@ inline
 #endif
 bool TextOMeterPrint(TextOMeter* const that, const char* const str);
 
+// Flush the stream of the TextOMeter 'that'
+#if BUILDMODE != 0
+inline
+#endif
+void TextOMeterFlush(TextOMeter* const that);
+
 // ================ Inliner ====================
 
 #if BUILDMODE != 0

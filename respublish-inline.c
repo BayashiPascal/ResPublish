@@ -45,6 +45,22 @@ bool TextOMeterPrint(TextOMeter* const that, const char* const str) {
   // Print the string on the tty
   if (fprintf(that->_fp, "%s", str) < 0)
     return false;
-  fflush(that->_fp);
   return true;
 }
+
+// Flush the stream of the TextOMeter 'that'
+#if BUILDMODE != 0
+inline
+#endif
+void TextOMeterFlush(TextOMeter* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif 
+  fflush(that->_fp);
+}
+
+

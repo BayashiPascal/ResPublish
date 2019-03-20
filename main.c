@@ -22,6 +22,8 @@ void UnitTestTextOMeter() {
     sprintf(ResPublishErr->_msg, "TextOMeterClear NOK");
     PBErrCatch(ResPublishErr);
   }
+  TextOMeterFlush(meterA);
+  TextOMeterFlush(meterB);
   sleep(2);
   TextOMeterFree(&meterA);
   TextOMeterFree(&meterB);
