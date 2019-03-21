@@ -89,6 +89,9 @@ TextOMeter* TextOMeterCreate(char* const title,
         strcpy(that->_tty, tty);
         // Open the tty to send message to the Xterm
         that->_fp = fopen(that->_tty, "w");
+        // Clear the content of the TextOMeter
+        TextOMeterClear(that);
+        TextOMeterFlush(that);
       }
       // Close the temporary file and delete it
       fclose(fp);
