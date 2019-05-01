@@ -7,8 +7,6 @@
 #include "respublish-inline.c"
 #endif
 
-// ================ Define ====================
-
 // ================ Functions implementation ====================
 
 // Create a new TextOMeter of 'width' columns and 'height' lines and
@@ -120,5 +118,69 @@ void TextOMeterFree(TextOMeter** that) {
   free((*that)->_title);
   free(*that);
   *that = NULL;
+}
+
+// ---- EstimTimeToComp
+
+// ================ Functions implementation ====================
+
+// Create a new EstimTimeToComp
+EstimTimeToComp EstimTimeToCompCreateStatic() {
+  // Declare the new EstimTimeToComp
+  EstimTimeToComp that;
+  // Set properties
+  ETCReset(&that);
+  that._etc[0] = '\0';
+  // Return the new EstimTimeToComp
+  return that;
+}
+
+// Free the memory used by the EstimTimeToComp 'that'
+void EstimTimeToCompFreeStatic(EstimTimeToComp* that) {
+  // Nothing to do
+  (void)that;
+}
+
+// Reset the start time of the EstimTimeToComp 'that' to current time
+void ETCReset(EstimTimeToComp* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // Reset the start time to the current time
+  that->_start = time(NULL);
+}
+
+// Estimate the ETC of the EstimTimeToComp 'that' given the percentage
+// of completion 'comp'
+// time(0) is expected to returned Thu Jan  1 00:00:00 1970
+const char* ETCGet(EstimTimeToComp* that, float comp) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // Get the current time
+  time_t cur = time(NULL);
+  // If the percentage of completino is valid
+  if (comp > 0.0 && comp <= 1.0) {
+    // Calculate the estimated time to completion and store the result
+    // in a string format
+    time_t elapsed = cur - that->_start;
+    time_t remain = (time_t)((float)elapsed / comp) - elapsed;
+    struct tm* rtm = gmtime(&remain);
+    sprintf(that->_etc, "%03dd:%02dh:%02dm:%02ds", 
+      (rtm->tm_year - 70) * 365 + rtm->tm_mon * 30 + rtm->tm_mday - 1, 
+      rtm->tm_hour, rtm->tm_min, rtm->tm_sec);
+  } else {
+    sprintf(that->_etc, "???d:??h:??m:??s"); 
+  }
+  // Return the etc
+  return that->_etc;
 }
 

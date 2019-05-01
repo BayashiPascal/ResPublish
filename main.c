@@ -35,8 +35,47 @@ void UnitTestTextOMeter() {
   printf("UnitTestTextOMeter OK\n");
 }
 
+void UnitTestEstimTimeToComp() {
+  EstimTimeToComp etc = EstimTimeToCompCreateStatic();
+  char* checkA[5] = {
+    "???d:??h:??m:??s",
+    "000d:00h:00m:03s",
+    "000d:00h:00m:02s",
+    "000d:00h:00m:01s",
+    "000d:00h:00m:00s"
+  };
+  for (int i = 0; i < 5; ++i) {
+    printf("%s\n", ETCGet(&etc, (float)i / 5.0));
+    sleep(1);
+    if (strcmp(etc._etc, checkA[i]) != 0) {
+      ResPublishErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(ResPublishErr->_msg, "ETCGet NOK");
+      PBErrCatch(ResPublishErr);
+    }
+  }
+  ETCReset(&etc);
+  char* checkB[5] = {
+    "???d:??h:??m:??s",
+    "576d:16h:53m:19s",
+    "286d:08h:26m:38s",
+    "191d:21h:37m:43s",
+    "144d:16h:13m:16s"
+  };
+  for (int i = 0; i < 5; ++i) {
+    printf("%s\n", ETCGet(&etc, (float)(i * i) / 50000000.0));
+    sleep(1);
+    if (strcmp(etc._etc, checkB[i]) != 0) {
+      ResPublishErr->_type = PBErrTypeUnitTestFailed;
+      sprintf(ResPublishErr->_msg, "ETCGet NOK");
+      PBErrCatch(ResPublishErr);
+    }
+  }
+  printf("UnitTestEstimTimeToComp OK\n");
+}
+
 void UnitTestAll() {
   UnitTestTextOMeter();
+  UnitTestEstimTimeToComp();
   printf("UnitTestAll OK\n");
 }
 

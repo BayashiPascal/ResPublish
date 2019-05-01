@@ -12,6 +12,7 @@
 #include <signal.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "pberr.h"
 
 // ---- TextOMeter
@@ -68,6 +69,35 @@ bool TextOMeterPrint(TextOMeter* const that, const char* const str);
 inline
 #endif
 void TextOMeterFlush(TextOMeter* const that);
+
+// ---- EstimTimeToComp
+
+// ================= Define ===================
+
+// ================= Data structure ===================
+
+typedef struct EstimTimeToComp {
+  // Start time
+  time_t _start;
+  // ETC
+  char _etc[100];
+} EstimTimeToComp;
+
+// ================ Functions declaration ====================
+
+// Create a new EstimTimeToComp
+EstimTimeToComp EstimTimeToCompCreateStatic();
+
+// Free the memory used by the EstimTimeToComp 'that'
+void EstimTimeToCompFreeStatic(EstimTimeToComp* that);
+
+// Reset the start time of the EstimTimeToComp 'that' to current time
+void ETCReset(EstimTimeToComp* that);
+
+// Estimate the ETC of the EstimTimeToComp 'that' given the percentage
+// of completion 'comp'
+// time(0) is expected to returned Thu Jan  1 00:00:00 1970
+const char* ETCGet(EstimTimeToComp* that, float comp);
 
 // ================ Inliner ====================
 
