@@ -248,7 +248,7 @@ void PBMailerSend(PBMailer* const that, const char* const subject) {
   time_t curTime = time(NULL);
   // If the delay since the last email is above the threshold and there
   // are messages
-  if (curTime - that->_lastEmailTime > that->_delayBetweenEmails &&
+  if (curTime - that->_lastEmailTime >= that->_delayBetweenEmails &&
     GSetNbElem(&(that->_messages)) > 0) {
     // Calculate the length of the body
     int bodyLength = 0;
@@ -274,7 +274,7 @@ void PBMailerSend(PBMailer* const that, const char* const subject) {
       fclose(fp);
       // Create the command to send the email
       char* cmd = malloc(strlen(that->_to) + strlen(subject) + 50);
-      sprintf(cmd, "mail -s \"%s\" %s < ./pbmailer.temp", subject, 
+      sprintf(cmd, "mail -s \"%s\" %s < ./pbmailer.temp &2>./pbmailer.log", subject, 
         that->_to);
       // Send the email
       int ret = system(cmd);

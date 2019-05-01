@@ -10,4 +10,5 @@ UnitTestTextOMeter OK
 191d:21h:37m:43s
 144d:16h:13m:16s
 UnitTestEstimTimeToComp OK
+UnitTestPBMailer OK
 UnitTestAll OK

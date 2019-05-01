@@ -76,9 +76,9 @@ void UnitTestEstimTimeToComp() {
 void UnitTestPBMailer() {
   char* email = "Your@Email.net";
   PBMailer mailer = PBMailerCreateStatic(email);
-  char* lineA = "UnitTestPBMailer, line A";
-  char* lineB = "UnitTestPBMailer, line B";
-  char* lineC = "UnitTestPBMailer, line C";
+  char* lineA = "UnitTestPBMailer, line A\n";
+  char* lineB = "UnitTestPBMailer, line B\n";
+  char* lineC = "UnitTestPBMailer, line C\n";
   PBMailerSend(&mailer, "");
   PBMailerAddStr(&mailer, lineA);
   PBMailerAddStr(&mailer, lineB);
@@ -125,8 +125,7 @@ void UnitTestAll() {
 }
 
 int main() {
-  //UnitTestAll();
-  UnitTestPBMailer();
+  UnitTestAll();
   // Return success code
   return 0;
 }
