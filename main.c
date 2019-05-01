@@ -73,14 +73,60 @@ void UnitTestEstimTimeToComp() {
   printf("UnitTestEstimTimeToComp OK\n");
 }
 
+void UnitTestPBMailer() {
+  char* email = "Your@Email.net";
+  PBMailer mailer = PBMailerCreateStatic(email);
+  char* lineA = "UnitTestPBMailer, line A";
+  char* lineB = "UnitTestPBMailer, line B";
+  char* lineC = "UnitTestPBMailer, line C";
+  PBMailerSend(&mailer, "");
+  PBMailerAddStr(&mailer, lineA);
+  PBMailerAddStr(&mailer, lineB);
+  PBMailerSend(&mailer, "UnitTestPBMailer, subject 1");
+  PBMailerAddStr(&mailer, lineC);
+  PBMailerSend(&mailer, "UnitTestPBMailer, subject 1");
+  PBMailerSetDelayBetweenEmails(&mailer, 10);
+  if (mailer._delayBetweenEmails != 10) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "PBMailerSetDelayBetweenEmails NOK");
+    PBErrCatch(ResPublishErr);
+  }
+  if (PBMailerGetDelayBetweenEmails(&mailer) != 10) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "PBMailerGetDelayBetweenEmails NOK");
+    PBErrCatch(ResPublishErr);
+  }
+  sleep(11);
+  PBMailerSend(&mailer, "UnitTestPBMailer, subject 2");
+  PBMailerAddStr(&mailer, lineA);
+  PBMailerFreeStatic(&mailer);
+  
+  // Emails reveived:
+/*
+UnitTestPBMailer, subject 1
+> UnitTestPBMailer, line A
+> UnitTestPBMailer, line B
+  
+UnitTestPBMailer, subject 2
+> UnitTestPBMailer, line C
+
+PBMailerFreeStatic flushing remaining messages
+> UnitTestPBMailer, line A
+*/
+  
+  printf("UnitTestPBMailer OK\n");
+}
+
 void UnitTestAll() {
   UnitTestTextOMeter();
   UnitTestEstimTimeToComp();
+  UnitTestPBMailer();
   printf("UnitTestAll OK\n");
 }
 
 int main() {
-  UnitTestAll();
+  //UnitTestAll();
+  UnitTestPBMailer();
   // Return success code
   return 0;
 }

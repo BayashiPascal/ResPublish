@@ -1,9 +1,9 @@
 \contentsline {section}{\numberline {1}Definitions}{2}
 \contentsline {subsection}{\numberline {1.1}TextOMeter}{2}
 \contentsline {section}{\numberline {2}Interface}{3}
-\contentsline {section}{\numberline {3}Code}{5}
-\contentsline {subsection}{\numberline {3.1}respublish.c}{5}
-\contentsline {subsection}{\numberline {3.2}respublish-inline.c}{8}
-\contentsline {section}{\numberline {4}Makefile}{9}
-\contentsline {section}{\numberline {5}Unit tests}{10}
-\contentsline {section}{\numberline {6}Unit tests output}{11}
+\contentsline {section}{\numberline {3}Code}{6}
+\contentsline {subsection}{\numberline {3.1}respublish.c}{6}
+\contentsline {subsection}{\numberline {3.2}respublish-inline.c}{11}
+\contentsline {section}{\numberline {4}Makefile}{12}
+\contentsline {section}{\numberline {5}Unit tests}{13}
+\contentsline {section}{\numberline {6}Unit tests output}{15}

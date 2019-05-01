@@ -157,7 +157,7 @@ void ETCReset(EstimTimeToComp* that) {
 // Estimate the ETC of the EstimTimeToComp 'that' given the percentage
 // of completion 'comp'
 // time(0) is expected to returned Thu Jan  1 00:00:00 1970
-const char* ETCGet(EstimTimeToComp* that, float comp) {
+const char* ETCGet(EstimTimeToComp* const that, float comp) {
 #if BUILDMODE == 0
   if (that == NULL) {
     ResPublishErr->_type = PBErrTypeNullPointer;
@@ -182,5 +182,131 @@ const char* ETCGet(EstimTimeToComp* that, float comp) {
   }
   // Return the etc
   return that->_etc;
+}
+
+// ---- PBMailer
+
+// ================ Functions implementation ====================
+
+// Create a new PBMailer toward the email adress 'to'
+// _delayBetweenEmails is initialiwed to 60s
+PBMailer PBMailerCreateStatic(const char* const to) {
+#if BUILDMODE == 0
+  if (to == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'to' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // Declare the new PBMailer
+  PBMailer that;
+  // Set properties
+  that._to = strdup(to);
+  that._messages = GSetStrCreateStatic();
+  that._delayBetweenEmails = 60;
+  that._lastEmailTime = 0;
+  // Return the new PBMailer
+  return that;
+}
+
+// Free the memory used by the PBMailer 'that'
+// Flush the remaining strings if any 
+void PBMailerFreeStatic(PBMailer* that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // Flush the remaing messages
+  that->_delayBetweenEmails = 0;
+  PBMailerSend(that, "PBMailerFreeStatic flushing remaining messages");
+  // Free memory
+  free(that->_to);
+}
+
+// Send the strings of the PBMailer 'that' if the last PBMailerSend
+// call is at least _delayBetweenEmails seconds old, else do nothing
+// with the subject 'subject' 
+// Uses the 'mail' command which is supposed to configure, up and 
+// running by the user
+void PBMailerSend(PBMailer* const that, const char* const subject) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+  if (subject == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'subject' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // Get the current time
+  time_t curTime = time(NULL);
+  // If the delay since the last email is above the threshold and there
+  // are messages
+  if (curTime - that->_lastEmailTime > that->_delayBetweenEmails &&
+    GSetNbElem(&(that->_messages)) > 0) {
+    // Calculate the length of the body
+    int bodyLength = 0;
+    GSetIterForward iter = 
+      GSetIterForwardCreateStatic(&(that->_messages));
+    do {
+      char* str = GSetIterGet(&iter);
+      bodyLength += strlen(str);
+    } while (GSetIterStep(&iter));
+    // Create the body of the email
+    char* body = malloc(bodyLength + 1);
+    int insertPos = 0;
+    while (GSetNbElem(&(that->_messages)) > 0) {
+      char* str = GSetPop(&(that->_messages));
+      sprintf(body + insertPos, "%s", str);
+      insertPos += strlen(str);
+      free(str);
+    }
+    // Save the body to a temporary file
+    FILE* fp = fopen("./pbmailer.temp", "w");
+    if (fp != NULL) {
+      fprintf(fp, "%s", body);
+      fclose(fp);
+      // Create the command to send the email
+      char* cmd = malloc(strlen(that->_to) + strlen(subject) + 50);
+      sprintf(cmd, "mail -s \"%s\" %s < ./pbmailer.temp", subject, 
+        that->_to);
+      // Send the email
+      int ret = system(cmd);
+      // Erase the temporary file
+      ret = system("rm ./pbmailer.temp");
+      // TODO should process the returned value
+      (void)ret;
+      // Free memory
+      free(cmd);
+    }
+    // Update the last email time
+    that->_lastEmailTime = time(NULL);
+    // Free memory
+    free(body);
+  }
+}
+
+// Add a copy of the string 'str' to the PBMailer 'that' to be sent
+// later with PBMailerSend() 
+void PBMailerAddStr(PBMailer* const that, const char* const str) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // If the string is null do nothing
+  if (str == NULL || strlen(str) == 0)
+    return;
+  // Add a copy of the string at the tail of the set of string
+  // to send
+  GSetAppend(&(that->_messages), strdup(str));
 }
 

@@ -1,5 +1,7 @@
 // ============ RESPUBLISH-INLINE.C ================
 
+// ---- TextOMeter
+
 // ================ Functions implementation ====================
 
 // Clear the content of the TextOMeter 'that'
@@ -63,4 +65,36 @@ void TextOMeterFlush(TextOMeter* const that) {
   fflush(that->_fp);
 }
 
+// ---- PBMailer
+
+// Set the minimum delay between emails of the PBMailer 'that' to 'delay'
+#if BUILDMODE != 0
+inline
+#endif 
+void PBMailerSetDelayBetweenEmails(PBMailer* const that, 
+  const time_t delay) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif 
+  that->_delayBetweenEmails = delay;  
+}
+
+// Get the minimum delay between emails of the PBMailer 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+time_t PBMailerGetDelayBetweenEmails(PBMailer* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif 
+  return that->_delayBetweenEmails;
+}
 

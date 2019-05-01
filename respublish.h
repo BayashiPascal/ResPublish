@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include "gset.h"
 #include "pberr.h"
 
 // ---- TextOMeter
@@ -97,7 +98,58 @@ void ETCReset(EstimTimeToComp* that);
 // Estimate the ETC of the EstimTimeToComp 'that' given the percentage
 // of completion 'comp'
 // time(0) is expected to returned Thu Jan  1 00:00:00 1970
-const char* ETCGet(EstimTimeToComp* that, float comp);
+const char* ETCGet(EstimTimeToComp* const that, float comp);
+
+// ---- PBMailer
+
+// ================= Define ===================
+
+// ================= Data structure ===================
+
+typedef struct PBMailer {
+  // Set of strings to send
+  GSetStr _messages;
+  // Target email address
+  char* _to;
+  // Minimum delay in seconds between two actual emails
+  // Used to avoid flooding the target address
+  time_t _delayBetweenEmails;
+  // Time of last sent email
+  time_t _lastEmailTime;
+} PBMailer;
+
+// ================ Functions declaration ====================
+
+// Create a new PBMailer toward the email adress 'to'
+// _delayBetweenEmails is initialiwed to 60s
+PBMailer PBMailerCreateStatic(const char* const to);
+
+// Free the memory used by the PBMailer 'that'
+// Flush the remaining strings if any 
+void PBMailerFreeStatic(PBMailer* that);
+
+// Send the strings of the PBMailer 'that' if the last PBMailerSend
+// call is at least _delayBetweenEmails seconds old, else do nothing
+// with the subject 'subject' 
+// Uses the 'mail' command which is supposed to configure, up and 
+// running by the user
+void PBMailerSend(PBMailer* const that, const char* const subject);
+
+// Add a copy of the string 'str' to the PBMailer 'that' to be sent
+// later with PBMailerSend() 
+void PBMailerAddStr(PBMailer* const that, const char* const str);
+
+// Set the minimum delay between emails of the PBMailer 'that' to 'delay'
+#if BUILDMODE != 0
+inline
+#endif 
+void PBMailerSetDelayBetweenEmails(PBMailer* const that, const time_t delay);
+
+// Get the minimum delay between emails of the PBMailer 'that'
+#if BUILDMODE != 0
+inline
+#endif 
+time_t PBMailerGetDelayBetweenEmails(PBMailer* const that);
 
 // ================ Inliner ====================
 
