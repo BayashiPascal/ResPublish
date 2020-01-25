@@ -101,7 +101,7 @@ void UnitTestPBMailer() {
   PBMailerAddStr(&mailer, lineA);
   PBMailerFreeStatic(&mailer);
   
-  // Emails reveived:
+  // Emails received:
 /*
 UnitTestPBMailer, subject 1
 > UnitTestPBMailer, line A
@@ -117,10 +117,100 @@ PBMailerFreeStatic flushing remaining messages
   printf("UnitTestPBMailer OK\n");
 }
 
+void UnitTestProgBarTxt() {
+
+  ProgBarTxt progBar = ProgBarTxtCreateStatic();
+  if (fabs(progBar._status) > PROGBARTXT_EPSILON ||
+    strcmp(progBar._bar, "|-----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtCreateStatic NOK %s",progBar._bar);
+    PBErrCatch(ResPublishErr);
+  }
+  if (ProgBarTxtGet(&progBar) != progBar._bar) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtGet NOK");
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.0);
+  if (strcmp(ProgBarTxtGet(&progBar), "|-----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.0 %s", 
+      ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.001);
+  if (strcmp(ProgBarTxtGet(&progBar), "|0----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.0 %s", 
+      ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.01);
+  if (strcmp(ProgBarTxtGet(&progBar), "|1----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.01 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.09);
+  if (strcmp(ProgBarTxtGet(&progBar), "|9----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.099 %s", 
+      ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.099);
+  if (strcmp(ProgBarTxtGet(&progBar), "|9----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.099 %s", 
+      ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.1);
+  if (strcmp(ProgBarTxtGet(&progBar), "|X----------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.1 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.11);
+  if (strcmp(ProgBarTxtGet(&progBar), "|X1---------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.11 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.5);
+  if (strcmp(ProgBarTxtGet(&progBar), "|XXXXX------|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.5 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.9);
+  if (strcmp(ProgBarTxtGet(&progBar), "|XXXXXXXXX--|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.9 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 0.99);
+  if (strcmp(ProgBarTxtGet(&progBar), "|XXXXXXXXX9-|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 0.99 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  ProgBarTxtSet(&progBar, 1.0);
+  if (strcmp(ProgBarTxtGet(&progBar), "|XXXXXXXXXXX|")) {
+    ResPublishErr->_type = PBErrTypeUnitTestFailed;
+    sprintf(ResPublishErr->_msg, "ProgBarTxtSet NOK 1.0 %s", ProgBarTxtGet(&progBar));
+    PBErrCatch(ResPublishErr);
+  }
+  
+  ProgBarTxtFreeStatic(&progBar);
+  printf("UnitTestProgBarTxt OK\n");
+}
+
 void UnitTestAll() {
-  UnitTestTextOMeter();
-  UnitTestEstimTimeToComp();
-  UnitTestPBMailer();
+  //UnitTestTextOMeter();
+  //UnitTestEstimTimeToComp();
+  //UnitTestPBMailer();
+  UnitTestProgBarTxt();
   printf("UnitTestAll OK\n");
 }
 

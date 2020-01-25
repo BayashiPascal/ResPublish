@@ -151,6 +151,40 @@ inline
 #endif 
 time_t PBMailerGetDelayBetweenEmails(PBMailer* const that);
 
+// ---- ProgBarTxt
+
+// ================= Define ===================
+
+#define PROGBARTXT_EPSILON 0.0001
+
+// ================= Data structure ===================
+
+typedef struct ProgBarTxt {
+  // The text progress bar
+  char _bar[14];
+  // Time of last sent email
+  float _status;
+} ProgBarTxt;
+
+// ================ Functions declaration ====================
+
+// Create a new static ProgBarTxt
+ProgBarTxt ProgBarTxtCreateStatic(void);
+ 
+// Free the static ProgBarTxt 'that'
+void ProgBarTxtFreeStatic(ProgBarTxt* that);
+
+// Set the status of the ProgBarTxt to 'status' (in 0.0,1.0)
+void ProgBarTxtSet(
+  ProgBarTxt* const that,
+  const float status);
+
+// Get the ProgBarTxt's text
+#if BUILDMODE != 0
+inline
+#endif 
+const char* ProgBarTxtGet(const ProgBarTxt* const that);
+
 // ================ Inliner ====================
 
 #if BUILDMODE != 0

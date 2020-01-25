@@ -98,3 +98,23 @@ time_t PBMailerGetDelayBetweenEmails(PBMailer* const that) {
   return that->_delayBetweenEmails;
 }
 
+// ---- ProgBarTxt
+
+// ================ Functions implementation ====================
+
+// Get the ProgBarTxt's text
+#if BUILDMODE != 0
+inline
+#endif 
+const char* ProgBarTxtGet(const ProgBarTxt* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif 
+  // Return the text of the ProgBarTxt
+  return that->_bar;
+}
+

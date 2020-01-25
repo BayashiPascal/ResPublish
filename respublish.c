@@ -310,3 +310,63 @@ void PBMailerAddStr(PBMailer* const that, const char* const str) {
   GSetAppend(&(that->_messages), strdup(str));
 }
 
+// ---- ProgBarTxt
+
+// ================ Functions implementation ====================
+
+// Create a new static ProgBarTxt
+ProgBarTxt ProgBarTxtCreateStatic(void) {
+  // Declare the new ProgBarTxt
+  ProgBarTxt that;
+  // Init properties
+  that._status = 0.0;
+  that._bar[0] = '|';
+  for (int i = 1; i < 12; ++i)
+    that._bar[i] = '-';
+  that._bar[12] = '|';
+  that._bar[13] = 0;
+  // Return the new ProgBarTxt
+  return that;
+}
+ 
+// Free the static ProgBarTxt 'that'
+void ProgBarTxtFreeStatic(ProgBarTxt* that) {
+  // Nothing to do
+  (void)that;
+}
+
+// Set the status of the ProgBarTxt to 'status' (in 0.0,1.0)
+void ProgBarTxtSet(
+  ProgBarTxt* const that,
+  const float status) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif 
+  // Sanitize input
+  float safeStatus = status;
+  if (safeStatus < 0.0)
+    safeStatus = 0.0;
+  if (safeStatus > 1.0)
+    safeStatus = 1.0;
+  safeStatus *= 100.0;
+  // Update the text of the progress bar
+  for (int iPos = 1; iPos < 12; ++iPos) {
+    float perc = 10.0 * (float)iPos;
+    float prevPerc = 10.0 * (float)(iPos  -1);
+    if (safeStatus >= perc - PROGBARTXT_EPSILON ||
+      safeStatus >= 100.0 - PROGBARTXT_EPSILON) {
+      that->_bar[iPos] = 'X';
+    } else if (safeStatus <= prevPerc + PROGBARTXT_EPSILON) {
+      that->_bar[iPos] = '-';
+    } else {
+      float a = safeStatus - prevPerc;
+      int b = (int)floor(a);
+      that->_bar[iPos] = '0' + b;
+    }
+  }
+}
+
