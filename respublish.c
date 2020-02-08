@@ -167,7 +167,7 @@ const char* ETCGet(EstimTimeToComp* const that, float comp) {
 #endif  
   // Get the current time
   time_t cur = time(NULL);
-  // If the percentage of completino is valid
+  // If the percentage of completion is valid
   if (comp > 0.0 && comp <= 1.0) {
     // Calculate the estimated time to completion and store the result
     // in a string format

@@ -30,3 +30,11 @@ $($(repo)_EXENAME).o: \
 	
 xterm: xterm.c
 	gcc -o xterm xterm.c
+
+install: install_xterm install_mail
+
+install_mail:
+	sudo apt-get install mailutils
+
+install_xterm:
+	sudo apt-get install xterm
