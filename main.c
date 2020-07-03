@@ -46,6 +46,7 @@ void UnitTestEstimTimeToComp() {
     printf("%s\n", ETCGet(&etc, (float)(i * i) / 50000000.0));
     sleep(1);
   }
+  printf("%s\n", ETCGetElapsed(&etc));
   printf("UnitTestEstimTimeToComp OK\n");
 }
 

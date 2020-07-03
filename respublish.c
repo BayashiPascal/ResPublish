@@ -184,6 +184,29 @@ const char* ETCGet(EstimTimeToComp* const that, float comp) {
   return that->_etc;
 }
 
+// Estimate the elapsed time since last reset of the EstimTimeToComp 'that'
+// time(0) is expected to returned Thu Jan  1 00:00:00 1970
+const char* ETCGetElapsed(EstimTimeToComp* const that) {
+#if BUILDMODE == 0
+  if (that == NULL) {
+    ResPublishErr->_type = PBErrTypeNullPointer;
+    sprintf(ResPublishErr->_msg, "'that' is null");
+    PBErrCatch(ResPublishErr);
+  }
+#endif  
+  // Get the current time
+  time_t cur = time(NULL);
+  // Calculate the estimated time to completion and store the result
+  // in a string format
+  time_t elapsed = cur - that->_start;
+  struct tm* rtm = gmtime(&elapsed);
+  sprintf(that->_etc, "%03dd:%02dh:%02dm:%02ds", 
+    (rtm->tm_year - 70) * 365 + rtm->tm_mon * 30 + rtm->tm_mday - 1, 
+    rtm->tm_hour, rtm->tm_min, rtm->tm_sec);
+  // Return the etc
+  return that->_etc;
+}
+
 // ---- PBMailer
 
 // ================ Functions implementation ====================

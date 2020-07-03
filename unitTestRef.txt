@@ -1,14 +1,16 @@
 UnitTestTextOMeter OK
 ???d:??h:??m:??s
+000d:00h:00m:04s
 000d:00h:00m:03s
 000d:00h:00m:02s
 000d:00h:00m:01s
-000d:00h:00m:00s
 ???d:??h:??m:??s
 576d:16h:53m:19s
 286d:08h:26m:38s
-191d:21h:37m:43s
+191d:21h:37m:44s
 144d:16h:13m:16s
+000d:00h:00m:05s
 UnitTestEstimTimeToComp OK
 UnitTestPBMailer OK
+UnitTestProgBarTxt OK
 UnitTestAll OK

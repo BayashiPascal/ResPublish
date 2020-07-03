@@ -100,6 +100,10 @@ void ETCReset(EstimTimeToComp* that);
 // time(0) is expected to returned Thu Jan  1 00:00:00 1970
 const char* ETCGet(EstimTimeToComp* const that, float comp);
 
+// Estimate the elapsed time since last reset of the EstimTimeToComp 'that'
+// time(0) is expected to returned Thu Jan  1 00:00:00 1970
+const char* ETCGetElapsed(EstimTimeToComp* const that);
+
 // ---- PBMailer
 
 // ================= Define ===================
